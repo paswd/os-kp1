@@ -28,7 +28,7 @@ public:
 class Warship {
 private:
 	Position Pos;
-	char Orientation; //'v' (vertical) or 'h' (horisontal)
+	char Orientation;
 	size_t Length;
 	Battlefield *Field;
 	size_t Lifes;

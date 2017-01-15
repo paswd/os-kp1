@@ -28,7 +28,6 @@ bool FreeShips::UseShip(size_t length) {
 		return false;
 	}
 	this->Arr[len_pos]--;
-	//this->Print();
 	return true;
 }
 void FreeShips::FreeShip(size_t length) {
@@ -55,38 +54,18 @@ Warship::Warship(void) {
 	this->Lifes = 0;
 }
 Warship::~Warship(void) {
-	//cout << "Pos: " << this->Pos << endl;
-	//cout << "Point1" << endl;
 	if (this->Field == NULL) {
 		return;
 	}
-	//cout << "Point2" << endl;
 	if (this->Orientation == VERTICAL) {
-		//cout << "Point3:1" << endl;
 		for (size_t i = this->Pos.Y; i < this->Pos.Y + this->Length; i++) {
 			this->Field->Map[this->Pos.X][i] = NULL;
 		}
-		//cout << "Point4:1" << endl;
 	} else {
-		//cout << "Point3:2" << endl;
 		for (size_t i = this->Pos.X; i < this->Pos.X + this->Length; i++) {
 			this->Field->Map[i][this->Pos.Y] = NULL;
 		}
-		//cout << "Point4:2" << endl;
 	}
-	//cout << "-----------------" << endl;
-	/*for (size_t i = 0; i < BATTLEFIELD_SIZE; i++) {
-		for (size_t j = 0; j < BATTLEFIELD_SIZE; j++) {
-			if (this->Field->Map[j][i] != NULL) {
-				cout << 1;
-			} else {
-				cout << 0;
-			}
-			cout << ' ';
-		}
-		cout << endl;
-	}*/
-	//cout << "=================" << endl;
 }
 void Warship::PrintErrorMessage(size_t error) {
 	switch (error) {
@@ -131,9 +110,7 @@ bool Warship::IsCorrectData(Position pos, char orientation, size_t length, Battl
 			}
 		}
 	} else {
-		//cout << pos << endl;
 		for (size_t i = min(pos.X - 1, pos.X); i <= pos.X + length; i++) {
-			//cout << "Correct: " << i << endl;
 			if (i >= BATTLEFIELD_SIZE && i != pos.X - 1 && i != pos.X + length) {
 				this->PrintErrorMessage(1);
 				return false;
@@ -176,16 +153,13 @@ bool Warship::Configure(Position pos, char orientation, size_t length, Battlefie
 
 	if (this->Orientation == VERTICAL) {
 		for (size_t i = this->Pos.Y; i < this->Pos.Y + length; i++) {
-			//cout << "{" << this->Pos.X << ":" << i << "}" << endl;
 			this->Field->Map[this->Pos.X][i] = this;
 		}
 	} else {
 		for (size_t i = this->Pos.X; i < this->Pos.X + length; i++) {
-			//cout << "{" << i << ":" << this->Pos.Y << "}" << endl;
 			this->Field->Map[i][this->Pos.Y] = this;
 		}
 	}
-	//cout << "-----" << endl;
 	return true;
 }
 Position Warship::GetPosition(void) {
@@ -208,7 +182,6 @@ bool Warship::IsDead(void) {
 void Warship::SetBorder(void) {
 	if (this->Orientation == VERTICAL) {
 		for (size_t i = min(this->Pos.Y - 1, this->Pos.Y); i <= this->Pos.Y + this->Length; i++) {
-			//this->Field->Map[this->Pos.X][i] = NULL;
 			for (size_t j = min(this->Pos.X - 1, this->Pos.X); j <= this->Pos.X + 1; j++) {
 				if (i < BATTLEFIELD_SIZE && j < BATTLEFIELD_SIZE) {
 					if (this->Field->Map[j][i] == NULL) {
@@ -219,7 +192,6 @@ void Warship::SetBorder(void) {
 		}
 	} else {
 		for (size_t i = min(this->Pos.X - 1, this->Pos.X); i <= this->Pos.X + this->Length; i++) {
-			//this->Field->Map[i][this->Pos.Y] = NULL;
 			for (size_t j = min(this->Pos.Y - 1, this->Pos.Y); j <= this->Pos.Y + 1; j++) {
 				if (i < BATTLEFIELD_SIZE && j < BATTLEFIELD_SIZE) {
 					if (this->Field->Map[i][j] == NULL) {
@@ -251,7 +223,6 @@ Battlefield::~Battlefield(void) {
 	for (size_t i = 0; i < BATTLEFIELD_SIZE; i++) {
 		for (size_t j = 0; j < BATTLEFIELD_SIZE; j++) {
 			if (this->Map[j][i] != NULL) {
-				//cout << "[" << j << ":" << i << "]" << endl;
 				delete this->Map[j][i];
 			}
 		}

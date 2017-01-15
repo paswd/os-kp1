@@ -20,7 +20,7 @@ int main(void) {
 	Position pos3(0, 6);
 	ship = new Warship;
 	ship->Configure(pos3, HORISONTAL, 3, &field);
-	Position pos4(2, 1);
+	Position pos4(1, 2);
 	field.Fire(pos4);
 	field.Print();
 	
