@@ -151,15 +151,17 @@ size_t RowToUNum(string str) {
 
 //========================
 
-bool InstallParser(string cmd, Battlefield *field) {
+bool InstallParser(string cmd, Battlefield *field, bool *game_continue) {
 	//set 4 vertical a 1
 	//delete a 1
+	*game_continue = true;
 	cmd = StringToLower(cmd);
 	if (cmd == "exit" || cmd.size() == 0) {
 		if (cmd.size() == 0) {
 			cout << "exit" << endl;
 		}
 		cout << "До свидания!" << endl;
+		*game_continue = false;
 		return false;
 	}
 	string action = GetParameter(cmd, 0);

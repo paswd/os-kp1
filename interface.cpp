@@ -12,17 +12,30 @@ Interface::Interface(void) {
 	this->Field = new Battlefield(true);
 }
 Interface::~Interface(void) {
-	delete this->Field;
+	if (this->Field != NULL) {
+		delete this->Field;
+	}
 }
 
-void Interface::MapInstallation(void) {
+void Interface::MainConsoleEngine(void) {
+	while (true) {
+		if (!this->MapInstallation()) {
+			break;
+		}
+	}
+}
+
+bool Interface::MapInstallation(void) {
 	string cmd = "";
 	this->Field->Print();
 	cout << "Для получения списка команд введите `help`" << endl;
+	bool game_continue;
 	do {
 		cout << ">>> ";
 		getline(cin, cmd);
-	} while (InstallParser(cmd, this->Field));
+		this->Field->Clear();
+	} while (InstallParser(cmd, this->Field, &game_continue));
+	return game_continue;
 }
 
 

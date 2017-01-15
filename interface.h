@@ -15,7 +15,8 @@ public:
 	Interface(void);
 	~Interface(void);
 
-	void MapInstallation(void);
+	void MainConsoleEngine(void);
+	bool MapInstallation(void);
 };
 
 #endif // INTERFACE_H
