@@ -74,6 +74,7 @@ public:
 	void Print(void);
 	bool Fire(Position pos);
 	void RandomFill(void);
+	void Clear(void);
 };
 
 #endif // BATTLEOBJECTS_H

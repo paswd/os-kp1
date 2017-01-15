@@ -3,6 +3,7 @@
 #include <time.h>
 #include "geometry.h"
 #include "battleobjects.h"
+#include "interface.h"
 
 using namespace std;
 
@@ -10,7 +11,10 @@ int main(void) {
 	setlocale(LC_ALL, "russian");
 	srand(time(NULL));
 
-	Battlefield field(true);
+	Interface interface;
+	interface.MapInstallation();
+
+	//Battlefield field(true);
 	/*field.Print();
 	Warship *ship = new Warship;
 	Position pos1(0, 0);
@@ -27,12 +31,12 @@ int main(void) {
 	field.Fire(pos4);
 	Position pos5(0, 0);
 	field.Fire(pos5);*/
-	field.RandomFill();
+	//field.RandomFill();
 	/*Warship *ship = new Warship;
 	Position pos1(5, 1);
 	ship->Configure(pos1, VERTICAL, 4, &field);*/
 	
-	field.Print();
+	//field.Print();
 	
 	return 0;
 }

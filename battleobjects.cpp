@@ -72,6 +72,7 @@ Warship::~Warship(void) {
 			this->Field->Map[i][this->Pos.Y] = NULL;
 		}
 	}
+	this->Field->Ships.FreeShip(this->Length);
 }
 void Warship::PrintErrorMessage(size_t error) {
 	switch (error) {
@@ -245,13 +246,7 @@ Battlefield::Battlefield(bool visibility) {
 	this->Visibility = visibility;
 }
 Battlefield::~Battlefield(void) {
-	for (size_t i = 0; i < BATTLEFIELD_SIZE; i++) {
-		for (size_t j = 0; j < BATTLEFIELD_SIZE; j++) {
-			if (this->Map[j][i] != NULL) {
-				delete this->Map[j][i];
-			}
-		}
-	}
+	this->Clear();
 }
 void Battlefield::PrintSymPublic(Position pos) {
 	if (this->Map[pos.X][pos.Y] != NULL) {
@@ -282,7 +277,7 @@ void Battlefield::PrintSymPrivate(Position pos) {
 void Battlefield::Print(void) {
 	for (size_t i = 0; i <= BATTLEFIELD_SIZE; i++) {
 		if (i == 0) {
-			cout << "  ";
+			cout << "   ";
 		} else {
 			cout << (char) (i + FIRST_LETTER - 1);
 		}
@@ -294,10 +289,11 @@ void Battlefield::Print(void) {
 			if (j == 0) {
 				//cout << i + 1;
 				size_t num = i + 1;
-				cout << num;
+				
 				if (num < 10) {
 					cout << ' ';
 				}
+				cout << num << ' ';
 			} else {
 				Position pos(j - 1, i);
 				if (this->Visibility) {
@@ -351,6 +347,15 @@ void Battlefield::RandomFill(void) {
 			} else {
 				//cout << "True" << endl;
 				ship = NULL;
+			}
+		}
+	}
+}
+void Battlefield::Clear(void) {
+	for (size_t i = 0; i < BATTLEFIELD_SIZE; i++) {
+		for (size_t j = 0; j < BATTLEFIELD_SIZE; j++) {
+			if (this->Map[j][i] != NULL) {
+				delete this->Map[j][i];
 			}
 		}
 	}

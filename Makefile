@@ -3,8 +3,8 @@ COMPILLER=g++
 
 all: start
 
-start: geometry.o battleobjects.o main.o
-	$(COMPILLER) $(FLAGS) -o sea-battle geometry.o battleobjects.o main.o
+start: geometry.o battleobjects.o interface.o parser.o main.o
+	$(COMPILLER) $(FLAGS) -o sea-battle geometry.o battleobjects.o interface.o parser.o main.o
 
 main.o: main.cpp
 	$(COMPILLER) -c $(FLAGS) main.cpp
@@ -14,6 +14,12 @@ geometry.o: geometry.cpp
 
 battleobjects.o: battleobjects.cpp
 	$(COMPILLER) -c $(FLAGS) battleobjects.cpp
+
+interface.o: interface.cpp
+	$(COMPILLER) -c $(FLAGS) interface.cpp
+
+parser.o: parser.cpp
+	$(COMPILLER) -c $(FLAGS) parser.cpp
 
 clear:
 	-rm -f *.o *.gch sea-battle
