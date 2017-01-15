@@ -30,6 +30,12 @@ bool FreeShips::UseShip(size_t length) {
 	this->Arr[len_pos]--;
 	return true;
 }
+bool FreeShips::IsUsable(size_t length) {
+	if (length > SHIP_MAX_LENGTH || length == 0) {
+		return false;
+	}
+	return this->Arr[length - 1] > 0;
+}
 void FreeShips::FreeShip(size_t length) {
 	if (length > SHIP_MAX_LENGTH || length == 0) {
 		return;
@@ -77,34 +83,45 @@ void Warship::PrintErrorMessage(size_t error) {
 			break;
 		default:
 			cout << "Ошибка конфигурации корабля" << endl;
+			break;
 	}
 }
-bool Warship::IsCorrectData(Position pos, char orientation, size_t length, Battlefield *field) {
+bool Warship::IsCorrectData(Position pos, char orientation, size_t length, Battlefield *field, bool show_errors) {
 	if (orientation != VERTICAL && orientation != HORISONTAL) {
-		this->PrintErrorMessage(2);
+		if (show_errors) {
+			this->PrintErrorMessage(2);
+		}
 		return false;
 	}
 	if (orientation == VERTICAL) {		
 		for (size_t i = min(pos.Y - 1, pos.Y); i <= pos.Y + length; i++) {
 			if (i >= BATTLEFIELD_SIZE && i != pos.Y - 1 && i != pos.Y + length) {
-				this->PrintErrorMessage(1);
+				if (show_errors) {
+					this->PrintErrorMessage(1);
+				}
 				return false;
 			} else if (i < BATTLEFIELD_SIZE) {
 				if (field->Map[pos.X][i] != NULL) {
-					this->PrintErrorMessage(1);
+					if (show_errors) {
+						this->PrintErrorMessage(1);
+					}
 					return false;
 				}
 			}
 		
 			if (i < BATTLEFIELD_SIZE && pos.X - 1 < BATTLEFIELD_SIZE) {
 				if (field->Map[pos.X - 1][i] != NULL) {
-					this->PrintErrorMessage(1);
+					if (show_errors) {
+						this->PrintErrorMessage(1);
+					}
 					return false;
 				}
 			}
 			if (i < BATTLEFIELD_SIZE && pos.X + 1 < BATTLEFIELD_SIZE) {
 				if (field->Map[pos.X + 1][i] != NULL) {
-					this->PrintErrorMessage(1);
+					if (show_errors) {
+						this->PrintErrorMessage(1);
+					}
 					return false;
 				}
 			}
@@ -112,24 +129,32 @@ bool Warship::IsCorrectData(Position pos, char orientation, size_t length, Battl
 	} else {
 		for (size_t i = min(pos.X - 1, pos.X); i <= pos.X + length; i++) {
 			if (i >= BATTLEFIELD_SIZE && i != pos.X - 1 && i != pos.X + length) {
-				this->PrintErrorMessage(1);
+				if (show_errors) {
+					this->PrintErrorMessage(1);
+				}
 				return false;
 			} else if (i < BATTLEFIELD_SIZE) {
 				if (field->Map[i][pos.Y] != NULL) {
-					this->PrintErrorMessage(1);
+					if (show_errors) {
+						this->PrintErrorMessage(1);
+					}
 					return false;
 				}
 			}
 		
 			if (i < BATTLEFIELD_SIZE && pos.Y - 1 < BATTLEFIELD_SIZE) {
 				if (field->Map[i][pos.Y - 1] != NULL) {
-					this->PrintErrorMessage(1);
+					if (show_errors) {
+						this->PrintErrorMessage(1);
+					}
 					return false;
 				}
 			}
 			if (i < BATTLEFIELD_SIZE && pos.Y + 1 < BATTLEFIELD_SIZE) {
 				if (field->Map[i][pos.Y + 1] != NULL) {
-					this->PrintErrorMessage(1);
+					if (show_errors) {
+						this->PrintErrorMessage(1);
+					}
 					return false;
 				}
 			}
@@ -138,8 +163,8 @@ bool Warship::IsCorrectData(Position pos, char orientation, size_t length, Battl
 
 	return true;
 }
-bool Warship::Configure(Position pos, char orientation, size_t length, Battlefield *field) {
-	if (!IsCorrectData(pos, orientation, length, field)) {
+bool Warship::Configure(Position pos, char orientation, size_t length, Battlefield *field,  bool show_errors) {
+	if (!IsCorrectData(pos, orientation, length, field, show_errors)) {
 		return false;
 	}
 	if (!field->Ships.UseShip(length)) {
@@ -231,33 +256,33 @@ Battlefield::~Battlefield(void) {
 void Battlefield::PrintSymPublic(Position pos) {
 	if (this->Map[pos.X][pos.Y] != NULL) {
 		if (this->Shots[pos.X][pos.Y]) {
-			cout << 'X';
+			cout << GRAPHICS_SHIP_DEAD;
 		} else {
-			cout << '*';
+			cout << GRAPHICS_SHIP;
 		}
 	} else {
 		if (this->Shots[pos.X][pos.Y]) {
-			cout << 'o';
+			cout << GRAPHICS_SPACE_DEAD;
 		} else {
-			cout << '.';
+			cout << GRAPHICS_SPACE;
 		}
 	}
 }
 void Battlefield::PrintSymPrivate(Position pos) {
 	if (this->Shots[pos.X][pos.Y]) {
 		if (this->Map[pos.X][pos.Y] != NULL) {
-			cout << 'X';
+			cout << GRAPHICS_SHIP_DEAD;
 		} else {
-			cout << 'o';
+			cout << GRAPHICS_SPACE_DEAD;
 		}
 	} else {
-		cout << '.';
+		cout << GRAPHICS_SPACE;
 	}
 }
 void Battlefield::Print(void) {
 	for (size_t i = 0; i <= BATTLEFIELD_SIZE; i++) {
 		if (i == 0) {
-			cout << ' ';
+			cout << "  ";
 		} else {
 			cout << (char) (i + FIRST_LETTER - 1);
 		}
@@ -267,7 +292,12 @@ void Battlefield::Print(void) {
 	for (size_t i = 0; i < BATTLEFIELD_SIZE; i++) {
 		for (size_t j = 0; j <= BATTLEFIELD_SIZE; j++) {
 			if (j == 0) {
-				cout << i + 1;
+				//cout << i + 1;
+				size_t num = i + 1;
+				cout << num;
+				if (num < 10) {
+					cout << ' ';
+				}
 			} else {
 				Position pos(j - 1, i);
 				if (this->Visibility) {
@@ -297,4 +327,31 @@ bool Battlefield::Fire(Position pos) {
 
 	return res;
 }
-
+void Battlefield::RandomFill(void) {
+	char orientation_variants[2];
+	orientation_variants[0] = VERTICAL;
+	orientation_variants[1] = HORISONTAL;
+	Warship *ship = NULL;
+	for (size_t i = SHIP_MAX_LENGTH; i > 0; i--) {
+		while (this->Ships.IsUsable(i)) {
+			//this->Ships.Print();
+			Position pos(rand() % (BATTLEFIELD_SIZE - i + 1), rand() % (BATTLEFIELD_SIZE - i + 1));
+			//cout << i << endl;
+			//cout << pos << endl;
+			char orientation = orientation_variants[rand() % 2];
+			//cout << orientation << endl;
+			//Warship *ship = new Warship;
+			if (ship == NULL) {
+				ship = new Warship;
+			}
+			if (!ship->Configure(pos, orientation, i, this, false)) {
+				//delete ship;
+				//cout << "False" << endl;
+				//this->Ships.FreeShip(i);
+			} else {
+				//cout << "True" << endl;
+				ship = NULL;
+			}
+		}
+	}
+}
