@@ -28,6 +28,7 @@ bool FreeShips::UseShip(size_t length) {
 		return false;
 	}
 	this->Arr[len_pos]--;
+	//this->Print();
 	return true;
 }
 void FreeShips::FreeShip(size_t length) {
@@ -51,6 +52,7 @@ Warship
 Warship::Warship(void) {
 	this->Orientation = 0;
 	this->Length = 0;
+	this->Lifes = 0;
 }
 Warship::~Warship(void) {
 	//cout << "Pos: " << this->Pos << endl;
@@ -104,11 +106,13 @@ bool Warship::IsCorrectData(Position pos, char orientation, size_t length, Battl
 		return false;
 	}
 	if (orientation == VERTICAL) {		
-		for (size_t i = pos.Y - 1; i <= pos.Y + length; i++) {
+		for (size_t i = min(pos.Y - 1, pos.Y); i <= pos.Y + length; i++) {
 			if (i >= BATTLEFIELD_SIZE && i != pos.Y - 1 && i != pos.Y + length) {
+				this->PrintErrorMessage(1);
 				return false;
 			} else if (i < BATTLEFIELD_SIZE) {
 				if (field->Map[pos.X][i] != NULL) {
+					this->PrintErrorMessage(1);
 					return false;
 				}
 			}
@@ -127,11 +131,15 @@ bool Warship::IsCorrectData(Position pos, char orientation, size_t length, Battl
 			}
 		}
 	} else {
-		for (size_t i = pos.X - 1; i <= pos.X + length; i++) {
+		//cout << pos << endl;
+		for (size_t i = min(pos.X - 1, pos.X); i <= pos.X + length; i++) {
+			//cout << "Correct: " << i << endl;
 			if (i >= BATTLEFIELD_SIZE && i != pos.X - 1 && i != pos.X + length) {
+				this->PrintErrorMessage(1);
 				return false;
 			} else if (i < BATTLEFIELD_SIZE) {
 				if (field->Map[i][pos.Y] != NULL) {
+					this->PrintErrorMessage(1);
 					return false;
 				}
 			}
@@ -163,6 +171,7 @@ bool Warship::Configure(Position pos, char orientation, size_t length, Battlefie
 	this->Pos = pos;
 	this->Orientation = orientation;
 	this->Length = length;
+	this->Lifes = this->Length;
 	this->Field = field;
 
 	if (this->Orientation == VERTICAL) {
@@ -187,6 +196,39 @@ char Warship::GetOrientation(void) {
 }
 size_t Warship::GetLength(void) {
 	return this->Length;
+}
+void Warship::Hit(void) {
+	if (this->Lifes > 0) {
+		this->Lifes--;
+	}
+}
+bool Warship::IsDead(void) {
+	return this->Lifes == 0;
+}
+void Warship::SetBorder(void) {
+	if (this->Orientation == VERTICAL) {
+		for (size_t i = min(this->Pos.Y - 1, this->Pos.Y); i <= this->Pos.Y + this->Length; i++) {
+			//this->Field->Map[this->Pos.X][i] = NULL;
+			for (size_t j = min(this->Pos.X - 1, this->Pos.X); j <= this->Pos.X + 1; j++) {
+				if (i < BATTLEFIELD_SIZE && j < BATTLEFIELD_SIZE) {
+					if (this->Field->Map[j][i] == NULL) {
+						this->Field->Shots[j][i] = true;
+					}
+				}
+			}
+		}
+	} else {
+		for (size_t i = min(this->Pos.X - 1, this->Pos.X); i <= this->Pos.X + this->Length; i++) {
+			//this->Field->Map[i][this->Pos.Y] = NULL;
+			for (size_t j = min(this->Pos.Y - 1, this->Pos.Y); j <= this->Pos.Y + 1; j++) {
+				if (i < BATTLEFIELD_SIZE && j < BATTLEFIELD_SIZE) {
+					if (this->Field->Map[i][j] == NULL) {
+						this->Field->Shots[i][j] = true;
+					}
+				}
+			}
+		}
+	}
 }
 
 
@@ -274,6 +316,14 @@ bool Battlefield::Fire(Position pos) {
 		return false;
 	}
 	this->Shots[pos.X][pos.Y] = true;
-	return this->Map[pos.X][pos.Y] != NULL;
+	bool res = this->Map[pos.X][pos.Y] != NULL;
+	if (res) {
+		this->Map[pos.X][pos.Y]->Hit();
+		if (this->Map[pos.X][pos.Y]->IsDead()) {
+			this->Map[pos.X][pos.Y]->SetBorder();
+		}
+	}
+
+	return res;
 }
 

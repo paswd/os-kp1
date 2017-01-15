@@ -31,6 +31,7 @@ private:
 	char Orientation; //'v' (vertical) or 'h' (horisontal)
 	size_t Length;
 	Battlefield *Field;
+	size_t Lifes;
 
 	void PrintErrorMessage(size_t error);
 	bool IsCorrectData(Position pos, char orientation, size_t length, Battlefield *field);
@@ -43,6 +44,9 @@ public:
 	Position GetPosition(void);
 	char GetOrientation(void);
 	size_t GetLength(void);
+	void Hit(void);
+	bool IsDead(void);
+	void SetBorder(void);
 };
 
 class Battlefield {
