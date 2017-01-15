@@ -3,11 +3,8 @@ COMPILLER=g++
 
 all: start
 
-start: TextProcessor.o main.o
-	$(COMPILLER) $(FLAGS) -o sea-battle TextProcessor.o main.o
-
-TextProcessor.o: TextProcessor.cpp
-	$(COMPILLER) -c $(FLAGS) TextProcessor.cpp
+start: main.o
+	$(COMPILLER) $(FLAGS) -o sea-battle main.o
 
 main.o: main.cpp
 	$(COMPILLER) -c $(FLAGS) main.cpp
