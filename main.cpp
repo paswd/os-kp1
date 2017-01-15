@@ -15,7 +15,8 @@ int main(void) {
 	field.Fire(pos1);
 	Position pos2(3, 4);
 	field.Fire(pos2);
-	//ship->Configure(pos2, HORISONTAL, 2, &field);
+	ship = new Warship();
+	ship->Configure(pos2, HORISONTAL, 4, &field);
 	field.Print();
 	
 	return 0;

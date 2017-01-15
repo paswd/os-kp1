@@ -37,10 +37,7 @@ private:
 
 public:
 	Warship(void);
-	//Warship(Position pos, char orientation, size_t length);
-	//Warship(Position pos, char orientation, size_t length, Battlefield *field);
 	~Warship(void);
-	//~Warship(Battlefield *field);
 	bool Configure(Position pos, char orientation, size_t length, Battlefield *field);
 
 	Position GetPosition(void);
@@ -58,7 +55,7 @@ private:
 public:
 	Warship *Map[BATTLEFIELD_SIZE][BATTLEFIELD_SIZE];
 	bool Shots[BATTLEFIELD_SIZE][BATTLEFIELD_SIZE];
-	
+
 	FreeShips Ships;
 	Battlefield(bool visibility);
 	~Battlefield(void);

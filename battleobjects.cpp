@@ -53,18 +53,38 @@ Warship::Warship(void) {
 	this->Length = 0;
 }
 Warship::~Warship(void) {
+	//cout << "Pos: " << this->Pos << endl;
+	//cout << "Point1" << endl;
 	if (this->Field == NULL) {
 		return;
 	}
+	//cout << "Point2" << endl;
 	if (this->Orientation == VERTICAL) {
+		//cout << "Point3:1" << endl;
 		for (size_t i = this->Pos.Y; i < this->Pos.Y + this->Length; i++) {
 			this->Field->Map[this->Pos.X][i] = NULL;
 		}
+		//cout << "Point4:1" << endl;
 	} else {
+		//cout << "Point3:2" << endl;
 		for (size_t i = this->Pos.X; i < this->Pos.X + this->Length; i++) {
 			this->Field->Map[i][this->Pos.Y] = NULL;
 		}
+		//cout << "Point4:2" << endl;
 	}
+	//cout << "-----------------" << endl;
+	/*for (size_t i = 0; i < BATTLEFIELD_SIZE; i++) {
+		for (size_t j = 0; j < BATTLEFIELD_SIZE; j++) {
+			if (this->Field->Map[j][i] != NULL) {
+				cout << 1;
+			} else {
+				cout << 0;
+			}
+			cout << ' ';
+		}
+		cout << endl;
+	}*/
+	//cout << "=================" << endl;
 }
 void Warship::PrintErrorMessage(size_t error) {
 	switch (error) {
@@ -147,13 +167,16 @@ bool Warship::Configure(Position pos, char orientation, size_t length, Battlefie
 
 	if (this->Orientation == VERTICAL) {
 		for (size_t i = this->Pos.Y; i < this->Pos.Y + length; i++) {
+			//cout << "{" << this->Pos.X << ":" << i << "}" << endl;
 			this->Field->Map[this->Pos.X][i] = this;
 		}
 	} else {
 		for (size_t i = this->Pos.X; i < this->Pos.X + length; i++) {
+			//cout << "{" << i << ":" << this->Pos.Y << "}" << endl;
 			this->Field->Map[i][this->Pos.Y] = this;
 		}
 	}
+	//cout << "-----" << endl;
 	return true;
 }
 Position Warship::GetPosition(void) {
@@ -185,8 +208,9 @@ Battlefield::Battlefield(bool visibility) {
 Battlefield::~Battlefield(void) {
 	for (size_t i = 0; i < BATTLEFIELD_SIZE; i++) {
 		for (size_t j = 0; j < BATTLEFIELD_SIZE; j++) {
-			if (this->Map[i][j] != NULL) {
-				delete this->Map[i][j];
+			if (this->Map[j][i] != NULL) {
+				//cout << "[" << j << ":" << i << "]" << endl;
+				delete this->Map[j][i];
 			}
 		}
 	}
@@ -243,6 +267,7 @@ void Battlefield::Print(void) {
 		}
 		cout << endl;
 	}
+	cout << endl;
 }
 bool Battlefield::Fire(Position pos) {
 	if (this->Shots[pos.X][pos.Y]) {
