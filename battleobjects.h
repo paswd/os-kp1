@@ -17,6 +17,8 @@ const char GRAPHICS_SHIP_DEAD = 'X';
 const char GRAPHICS_SPACE = '.';
 const char GRAPHICS_SPACE_DEAD = 'o';
 
+const size_t MAP_SIZE = 512;
+
 class Battlefield;
 
 class FreeShips {

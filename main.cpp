@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
 #include <time.h>
-#include "geometry.h"
-#include "battleobjects.h"
+//#include "geometry.h"
+//#include "battleobjects.h"
 #include "interface.h"
 
 using namespace std;

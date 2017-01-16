@@ -5,6 +5,9 @@
 #include "geometry.h"
 #include "battleobjects.h"
 #include "converter.h"
+#include "package.h"
+#include <cstdio>
+#include <string.h>
 
 using namespace std;
 
@@ -159,14 +162,21 @@ bool InstallParser(string cmd, Battlefield *field, bool *game_continue) {
 	return true;
 }
 
-bool BattleParser(string cmd, Battlefield *field, bool *game_continue) {
+bool BattleParser(string cmd, Battlefield *field, Package *package, bool *game_continue) {
 	*game_continue = true;
 	cmd = StringToLower(cmd);
+	package->IsAnswer = true;
 	if (cmd == "exit" || cmd.size() == 0) {
+		string message = "";
 		if (cmd.size() == 0) {
-			cout << "exit" << endl;
+			message += "exit\n";
 		}
-		cout << "До свидания!" << endl;
+		//cout << "До свидания!" << endl;
+		message += "До свидания!";
+		cout << message << endl;
+		//package->Message = message.c_str();
+		strcpy(strdup(message.c_str()), package->Message);
+		package->Exit = true;
 		*game_continue = false;
 		return false;
 	}
@@ -176,17 +186,25 @@ bool BattleParser(string cmd, Battlefield *field, bool *game_continue) {
 		size_t row = RowToUNum(GetParameter(cmd, 2));
 		Position pos(col, row);
 		if (pos.X >= BATTLEFIELD_SIZE || pos.Y >= BATTLEFIELD_SIZE) {
-			cout << "Некорректная позиция" << endl;
+			string message = "Некорректная позиция";
+			//package->Message = message.c_str();
+			strcpy(strdup(message.c_str()), package->Message);
 			return true;
 		}
 		if (field->Fire(pos)) {
 			cout << "Попадание!" << endl;
+			package->IsHit = true;
 		} else {
 			cout << "Промах!" << endl;
 		}
-		field->Print();
+		string map_new = field->GetMap(true);
+		package->IsMap = true;
+		//package->Map = map_new.c_str();
+		strcpy(strdup(map_new.c_str()), package->Map);
+		//field->Print();
 		if (field->IsGameOver()) {
-			cout << "Вы победили!" << endl;
+			cout << "Игра окончена!" << endl;
+			package->IsGameOver = true;
 			return false;
 		}
 		return true;
