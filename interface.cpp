@@ -136,7 +136,9 @@ bool Interface::GameControl(void) {
 				}
 				cout << "PointIn3" << endl;
 				if (package.IsQuestion) {
+					//cout << "Cmd::Bas: `" << package.Cmd << "`" << endl;
 					string cmd(package.Cmd);
+					//cout << "Cmd::Str: `" << cmd << "`" << endl;
 					SetEmptyPackage(&package);
 					cont = BattleParser(cmd, this->Field, &package, &game_continue);
 					write(ToClient, &package, sizeof(Package));
@@ -194,7 +196,8 @@ bool Interface::GameControl(void) {
 				//cout << "До свидания!" << endl;
 				message += "До свидания!";
 				cout << message << endl;
-				strcpy(strdup(message.c_str()), package.Message);
+				//strcpy(strdup(message.c_str()), package.Message);
+				StringToBas(message, package.Message);
 				package.Exit = true;
 				game_continue = false;
 			}
@@ -202,7 +205,10 @@ bool Interface::GameControl(void) {
 		
 		SetEmptyPackage(&package);
 		package.IsQuestion = true;
-		strcpy(strdup(cmd.c_str()), package.Cmd);
+		cout << "Cmd::Str: `" << cmd << "`" << endl;
+		//strcpy(strdup(cmd.c_str()), package.Cmd);
+		StringToBas(cmd, package.Cmd);
+		cout << "Cmd::Bas: `" << package.Cmd << "`" << endl;
 		if (this->IsServer) {
 			write(ToClient, &package, sizeof(Package));
 			if (!game_continue) {
@@ -214,8 +220,8 @@ bool Interface::GameControl(void) {
 				string new_map(package.Map);
 				this->EnemyField = new_map;
 			}
-			this->Field->Print();
-			cout << this->EnemyField << endl;
+			//this->Field->Print();
+			//cout << this->EnemyField << endl;
 
 			cout << package.Message << endl;
 			
@@ -237,8 +243,8 @@ bool Interface::GameControl(void) {
 				string new_map(package.Map);
 				this->EnemyField = new_map;
 			}
-			this->Field->Print();
-			cout << this->EnemyField << endl;
+			//this->Field->Print();
+			//cout << this->EnemyField << endl;
 
 			cout << package.Message << endl;
 			
@@ -249,6 +255,8 @@ bool Interface::GameControl(void) {
 			package.Status = true;
 			write(ToServer, &package, sizeof(Package));
 		}
+		this->Field->Print();
+			cout << this->EnemyField << endl;
 		if (!game_continue) {
 			return false;
 		}

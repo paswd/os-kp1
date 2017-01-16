@@ -188,7 +188,8 @@ bool BattleParser(string cmd, Battlefield *field, Package *package, bool *game_c
 		if (pos.X >= BATTLEFIELD_SIZE || pos.Y >= BATTLEFIELD_SIZE) {
 			string message = "Некорректная позиция";
 			//package->Message = message.c_str();
-			strcpy(strdup(message.c_str()), package->Message);
+			//strcpy(strdup(message.c_str()), package->Message);
+			StringToBas(message, package->Message);
 			return true;
 		}
 		if (field->Fire(pos)) {
@@ -200,7 +201,8 @@ bool BattleParser(string cmd, Battlefield *field, Package *package, bool *game_c
 		string map_new = field->GetMap(true);
 		package->IsMap = true;
 		//package->Map = map_new.c_str();
-		strcpy(strdup(map_new.c_str()), package->Map);
+		//strcpy(strdup(map_new.c_str()), package->Map);
+		StringToBas(map_new, package->Map);
 		//field->Print();
 		if (field->IsGameOver()) {
 			cout << "Игра окончена!" << endl;
@@ -239,6 +241,9 @@ bool BattleParser(string cmd, Battlefield *field, Package *package, bool *game_c
 		cout << "exit - выход из игры" << endl;
 		cout << "help - список доступных в данный момент команд" << endl;
 		return true;
+	}
+	if (action == "exit") {
+		cout << "Соперник вышел из игры" << endl;
 	}
 	
 	cout << "Неизвестная команда `" << action << "`" << endl;

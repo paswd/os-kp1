@@ -12,8 +12,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-//Tmp files
-
 
 class Interface {
 private:

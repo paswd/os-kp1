@@ -15,5 +15,6 @@ char UNumToChar(size_t num);
 std::string UNumToString(size_t num);
 size_t CharToUNum(char sym);
 size_t StringToUNum(std::string str);
+void StringToBas(std::string str, char *arr);
 
 #endif // CONVERTER_H

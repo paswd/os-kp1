@@ -1,4 +1,5 @@
 #include "converter.h"
+#include "package.h"
 
 #include <iostream>
 #include <string>
@@ -99,4 +100,11 @@ size_t StringToUNum(string str) {
 		res += CharToUNum(str[i]);
 	}
 	return res;
+}
+void StringToBas(string str, char *arr) {
+	size_t i = 0;
+	for (; i < min((size_t) str.size(), (size_t) STR_SIZE - 1); i++) {
+		arr[i] = str[i];
+	}
+	arr[i] = '\0';
 }
