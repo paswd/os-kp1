@@ -3,6 +3,8 @@
  void SetEmptyPackage(Package *package) {
 	package->IsMap = false;
 	package->Map[0] = '\0';
+	package->Message[0] = '\0';
+	package->Cmd[0] = '\0';
 	package->IsQuestion = false;
 	package->IsAnswer = false;
 	package->IsHit = false;

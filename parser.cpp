@@ -154,7 +154,7 @@ bool InstallParser(string cmd, Battlefield *field, bool *game_continue) {
 			cout << "Вы должы поставить на поле все имеющиеся корабли" << endl;
 			return true;
 		}
-		cout << "Игра начинается..." << endl;
+		//cout << "Игра начинается..." << endl;
 		return false;
 	}
 	
@@ -166,7 +166,7 @@ bool BattleParser(string cmd, Battlefield *field, Package *package, bool *game_c
 	*game_continue = true;
 	cmd = StringToLower(cmd);
 	package->IsAnswer = true;
-	if (cmd == "exit" || cmd.size() == 0) {
+	/*if (cmd == "exit" || cmd.size() == 0) {
 		string message = "";
 		if (cmd.size() == 0) {
 			message += "exit\n";
@@ -179,7 +179,7 @@ bool BattleParser(string cmd, Battlefield *field, Package *package, bool *game_c
 		package->Exit = true;
 		*game_continue = false;
 		return false;
-	}
+	}*/
 	string action = GetParameter(cmd, 0);
 	if (action == "shot") {
 		size_t col = ColToUNum(GetParameter(cmd, 1));
@@ -231,7 +231,7 @@ bool BattleParser(string cmd, Battlefield *field, Package *package, bool *game_c
 	}*/
 
 	if (action == "help") {
-		cout << "Команды настройки игровой карты:" << endl;
+		cout << "Команды геймплея:" << endl;
 		cout << "shot <буква> <число> - произвести выстрел" << endl;
 		cout << "Пример: \n`>>> shot a 3`"<< endl;
 		//cout << "restart - сдаться и начать игру сначала" << endl;
