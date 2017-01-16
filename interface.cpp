@@ -17,25 +17,43 @@ Interface::~Interface(void) {
 	}
 }
 
-void Interface::MainConsoleEngine(void) {
+void Interface::Start(void) {
 	while (true) {
-		if (!this->MapInstallation()) {
+		if (!this->GameControl("install")) {
+			break;
+		}
+		if (!this->GameControl("battle")) {
 			break;
 		}
 	}
 }
 
-bool Interface::MapInstallation(void) {
+bool Interface::GameControl(string mode) {
 	string cmd = "";
 	this->Field->Print();
-	cout << "Для получения списка команд введите `help`" << endl;
+	if (mode == "install") {
+		this->Field->Clear();
+		cout << "Для получения текущего списка команд введите `help`" << endl;
+	}
 	bool game_continue;
-	do {
+	while (true) {
 		cout << ">>> ";
 		getline(cin, cmd);
-		this->Field->Clear();
-	} while (InstallParser(cmd, this->Field, &game_continue));
+		//this->Field->Clear();
+		if (mode == "install") {
+			//this->Field->Clear();
+			if (!InstallParser(cmd, this->Field, &game_continue)) {
+				break;
+			}
+		}
+		if (mode == "battle") {
+			if (!BattleParser(cmd, this->Field, &game_continue)) {
+				break;
+			}
+		}
+	}
 	return game_continue;
 }
+
 
 

@@ -10,13 +10,14 @@
 class Interface {
 private:
 	Battlefield *Field;
+	std::string EnemyField;
 
 public:
 	Interface(void);
 	~Interface(void);
 
-	void MainConsoleEngine(void);
-	bool MapInstallation(void);
+	void Start(void);
+	bool GameControl(std::string mode);
 };
 
 #endif // INTERFACE_H

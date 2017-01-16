@@ -12,7 +12,7 @@ int main(void) {
 	srand(time(NULL));
 
 	Interface interface;
-	interface.MainConsoleEngine();
+	interface.Start();
 	
 	return 0;
 }

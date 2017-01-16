@@ -235,6 +235,7 @@ bool InstallParser(string cmd, Battlefield *field, bool *game_continue) {
 		cout << "random - установить случайную позицию" << endl;
 		cout << "clear - очистить поле" << endl;
 		cout << "start - начать игру" << endl;
+		//cout << "show - отобразить поле" << endl;
 		cout << "exit - выход из игры" << endl;
 		cout << "help - список доступных в данный момент команд" << endl;
 		return true;
@@ -242,6 +243,70 @@ bool InstallParser(string cmd, Battlefield *field, bool *game_continue) {
 	if (action == "start") {
 		cout << "Игра начинается... (в разработке)" << endl;
 		return false;
+	}
+	
+	cout << "Неизвестная команда `" << action << "`" << endl;
+	return true;
+}
+
+bool BattleParser(string cmd, Battlefield *field, bool *game_continue) {
+	*game_continue = true;
+	cmd = StringToLower(cmd);
+	if (cmd == "exit" || cmd.size() == 0) {
+		if (cmd.size() == 0) {
+			cout << "exit" << endl;
+		}
+		cout << "До свидания!" << endl;
+		*game_continue = false;
+		return false;
+	}
+	string action = GetParameter(cmd, 0);
+	if (action == "shot") {
+		size_t col = ColToUNum(GetParameter(cmd, 1));
+		size_t row = RowToUNum(GetParameter(cmd, 2));
+		Position pos(col, row);
+		if (pos.X >= BATTLEFIELD_SIZE || pos.Y >= BATTLEFIELD_SIZE) {
+			cout << "Некорректная позиция" << endl;
+			return true;
+		}
+		if (field->Fire(pos)) {
+			cout << "Попадание!" << endl;
+		} else {
+			cout << "Промах!" << endl;
+		}
+		field->Print();
+		return true;
+	}
+	/*if (action == "restart") {
+		cout << "Вы уверены? (y/n)" << endl;
+		string ans;
+		bool first = true;
+		do {
+			if (!first) {
+				cout << "Повторите ввод" << endl;
+			}
+			cout << ">>> ";
+			cin >> ans;
+		} while (ans == "y" || ans == "n");
+		if (ans == "y") {
+			return false;
+		}
+		return true;
+	}*/
+	/*if (action == "show") {
+		
+		field->Print();
+	}*/
+
+	if (action == "help") {
+		cout << "Команды настройки игровой карты:" << endl;
+		cout << "shot <буква> <число> - произвести выстрел" << endl;
+		cout << "Пример: \n`>>> shot a 3`"<< endl;
+		//cout << "restart - сдаться и начать игру сначала" << endl;
+		//cout << "show - отобразить поле" << endl;
+		cout << "exit - выход из игры" << endl;
+		cout << "help - список доступных в данный момент команд" << endl;
+		return true;
 	}
 	
 	cout << "Неизвестная команда `" << action << "`" << endl;

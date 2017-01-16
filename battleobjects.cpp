@@ -352,6 +352,7 @@ void Battlefield::RandomFill(void) {
 	}
 }
 void Battlefield::Clear(void) {
+	//cout << "Clear::True" << endl;
 	for (size_t i = 0; i < BATTLEFIELD_SIZE; i++) {
 		for (size_t j = 0; j < BATTLEFIELD_SIZE; j++) {
 			if (this->Map[j][i] != NULL) {

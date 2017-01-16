@@ -14,7 +14,7 @@ const char FIRST_LETTER = 'A';
 const char GRAPHICS_SHIP = 'S';
 const char GRAPHICS_SHIP_DEAD = 'X';
 const char GRAPHICS_SPACE = '.';
-const char GRAPHICS_SPACE_DEAD = '-';
+const char GRAPHICS_SPACE_DEAD = 'o';
 
 class Battlefield;
 
