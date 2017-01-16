@@ -13,8 +13,10 @@ FreeShips
 */
 
 FreeShips::FreeShips(void) {
+	this->MaxPoints = 0;
 	for (size_t i = 0; i < SHIP_MAX_LENGTH; i++) {
 		this->Arr[i] = SHIP_MAX_LENGTH - i;
+		this->MaxPoints += (i + 1) * (SHIP_MAX_LENGTH - i);
 	}
 }
 FreeShips::~FreeShips(void) {
@@ -47,6 +49,16 @@ void FreeShips::Print(void) {
 	for (size_t i = 0; i < SHIP_MAX_LENGTH; i++) {
 		cout << i + 1 << "-палубный: " << this->Arr[i] << " шт." << endl;
 	}
+}
+size_t FreeShips::GetMaxPoints(void) {
+	return this->MaxPoints;
+}
+size_t FreeShips::TotalFree(void) {
+	size_t res = 0;
+	for (size_t i = 0; i < SHIP_MAX_LENGTH; i++) {
+		res += this->Arr[i];
+	}
+	return res;
 }
 
 /*
@@ -238,6 +250,7 @@ Battlefield
 */
 
 Battlefield::Battlefield(void) {
+	this->Points = 0;
 	for (size_t i = 0; i < BATTLEFIELD_SIZE; i++) {
 		for (size_t j = 0; j < BATTLEFIELD_SIZE; j++) {
 			this->Map[i][j] = NULL;
@@ -326,6 +339,7 @@ bool Battlefield::Fire(Position pos) {
 		if (this->Map[pos.X][pos.Y]->IsDead()) {
 			this->Map[pos.X][pos.Y]->SetBorder();
 		}
+		this->Points++;
 	}
 
 	return res;
@@ -359,6 +373,7 @@ void Battlefield::RandomFill(void) {
 	}
 }
 void Battlefield::Clear(void) {
+	this->Points = 0;
 	//cout << "Clear::True" << endl;
 	for (size_t i = 0; i < BATTLEFIELD_SIZE; i++) {
 		for (size_t j = 0; j < BATTLEFIELD_SIZE; j++) {
@@ -367,4 +382,7 @@ void Battlefield::Clear(void) {
 			}
 		}
 	}
+}
+bool Battlefield::IsGameOver(void) {
+	return this->Points >= this->Ships.GetMaxPoints();
 }

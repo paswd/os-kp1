@@ -147,6 +147,10 @@ bool InstallParser(string cmd, Battlefield *field, bool *game_continue) {
 		return true;
 	}
 	if (action == "start") {
+		if (field->Ships.TotalFree() > 0) {
+			cout << "Вы должы поставить на поле все имеющиеся корабли" << endl;
+			return true;
+		}
 		cout << "Игра начинается..." << endl;
 		return false;
 	}
@@ -181,6 +185,10 @@ bool BattleParser(string cmd, Battlefield *field, bool *game_continue) {
 			cout << "Промах!" << endl;
 		}
 		field->Print();
+		if (field->IsGameOver()) {
+			cout << "Вы победили!" << endl;
+			return false;
+		}
 		return true;
 	}
 	/*if (action == "restart") {

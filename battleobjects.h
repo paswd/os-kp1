@@ -22,6 +22,7 @@ class Battlefield;
 class FreeShips {
 private:
 	size_t Arr[SHIP_MAX_LENGTH];
+	size_t MaxPoints;
 
 public:
 	FreeShips(void);
@@ -31,6 +32,8 @@ public:
 	bool IsUsable(size_t length);
 	void FreeShip(size_t length);
 	void Print(void);
+	size_t GetMaxPoints(void);
+	size_t TotalFree(void);
 };
 
 class Warship {
@@ -60,6 +63,7 @@ public:
 class Battlefield {
 private:
 	//bool Visibility;
+	size_t Points;
 
 	char GetSymPublic(Position pos);
 	char GetSymPrivate(Position pos);
@@ -77,6 +81,7 @@ public:
 	bool Fire(Position pos);
 	void RandomFill(void);
 	void Clear(void);
+	bool IsGameOver(void);
 };
 
 #endif // BATTLEOBJECTS_H
