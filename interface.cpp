@@ -9,7 +9,7 @@
 using namespace std;
 
 Interface::Interface(void) {
-	this->Field = new Battlefield(true);
+	this->Field = new Battlefield();
 }
 Interface::~Interface(void) {
 	if (this->Field != NULL) {

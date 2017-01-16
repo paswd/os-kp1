@@ -1,6 +1,7 @@
 #include "battleobjects.h"
 #include <iostream>
 #include "geometry.h"
+#include "converter.h"
 #include <string>
 
 using namespace std;
@@ -236,54 +237,55 @@ Battlefield
 ===========
 */
 
-Battlefield::Battlefield(bool visibility) {
+Battlefield::Battlefield(void) {
 	for (size_t i = 0; i < BATTLEFIELD_SIZE; i++) {
 		for (size_t j = 0; j < BATTLEFIELD_SIZE; j++) {
 			this->Map[i][j] = NULL;
 			this->Shots[i][j] = false;
 		}
 	}
-	this->Visibility = visibility;
+	//this->Visibility = visibility;
 }
 Battlefield::~Battlefield(void) {
 	this->Clear();
 }
-void Battlefield::PrintSymPublic(Position pos) {
+char Battlefield::GetSymPublic(Position pos) {
 	if (this->Map[pos.X][pos.Y] != NULL) {
 		if (this->Shots[pos.X][pos.Y]) {
-			cout << GRAPHICS_SHIP_DEAD;
+			return GRAPHICS_SHIP_DEAD;
 		} else {
-			cout << GRAPHICS_SHIP;
+			return GRAPHICS_SHIP;
 		}
 	} else {
 		if (this->Shots[pos.X][pos.Y]) {
-			cout << GRAPHICS_SPACE_DEAD;
+			return GRAPHICS_SPACE_DEAD;
 		} else {
-			cout << GRAPHICS_SPACE;
+			return GRAPHICS_SPACE;
 		}
 	}
 }
-void Battlefield::PrintSymPrivate(Position pos) {
+char Battlefield::GetSymPrivate(Position pos) {
 	if (this->Shots[pos.X][pos.Y]) {
 		if (this->Map[pos.X][pos.Y] != NULL) {
-			cout << GRAPHICS_SHIP_DEAD;
+			return GRAPHICS_SHIP_DEAD;
 		} else {
-			cout << GRAPHICS_SPACE_DEAD;
+			return GRAPHICS_SPACE_DEAD;
 		}
 	} else {
-		cout << GRAPHICS_SPACE;
+		return GRAPHICS_SPACE;
 	}
 }
-void Battlefield::Print(void) {
+string Battlefield::GetMap(bool is_private) {
+	string res = "";
 	for (size_t i = 0; i <= BATTLEFIELD_SIZE; i++) {
 		if (i == 0) {
-			cout << "   ";
+			res += "   ";
 		} else {
-			cout << (char) (i + FIRST_LETTER - 1);
+			res += (char) (i + FIRST_LETTER - 1);
 		}
-		cout << ' ';
+		res += ' ';
 	}
-	cout << endl;
+	res += '\n';
 	for (size_t i = 0; i < BATTLEFIELD_SIZE; i++) {
 		for (size_t j = 0; j <= BATTLEFIELD_SIZE; j++) {
 			if (j == 0) {
@@ -291,22 +293,27 @@ void Battlefield::Print(void) {
 				size_t num = i + 1;
 				
 				if (num < 10) {
-					cout << ' ';
+					res += ' ';
 				}
-				cout << num << ' ';
+				res += UNumToString(num) + ' ';
 			} else {
 				Position pos(j - 1, i);
-				if (this->Visibility) {
-					PrintSymPublic(pos);
+				if (!is_private) {
+					res += GetSymPublic(pos);
 				} else {
-					PrintSymPrivate(pos);
+					res += GetSymPrivate(pos);
 				}
+				
 			}
-			cout << ' ';
+			res += ' ';
 		}
-		cout << endl;
+		res += '\n';
 	}
-	cout << endl;
+	res += '\n';
+	return res;
+}
+void Battlefield::Print(void) {
+	cout << GetMap(false);
 }
 bool Battlefield::Fire(Position pos) {
 	if (this->Shots[pos.X][pos.Y]) {

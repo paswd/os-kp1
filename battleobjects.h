@@ -2,6 +2,7 @@
 #define BATTLEOBJECTS_H
 
 #include "geometry.h"
+#include "converter.h"
 #include <string>
 
 const size_t BATTLEFIELD_SIZE = 10;
@@ -58,19 +59,20 @@ public:
 
 class Battlefield {
 private:
-	bool Visibility;
+	//bool Visibility;
 
-	void PrintSymPublic(Position pos);
-	void PrintSymPrivate(Position pos);
+	char GetSymPublic(Position pos);
+	char GetSymPrivate(Position pos);
 
 public:
 	Warship *Map[BATTLEFIELD_SIZE][BATTLEFIELD_SIZE];
 	bool Shots[BATTLEFIELD_SIZE][BATTLEFIELD_SIZE];
 
 	FreeShips Ships;
-	Battlefield(bool visibility);
+	Battlefield(void);
 	~Battlefield(void);
 
+	std::string GetMap(bool is_private);
 	void Print(void);
 	bool Fire(Position pos);
 	void RandomFill(void);
