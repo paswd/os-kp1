@@ -326,7 +326,7 @@ string Battlefield::GetMap(bool is_private) {
 	return res;
 }
 void Battlefield::Print(void) {
-	cout << GetMap(false);
+	cout << this->GetMap(false);
 }
 bool Battlefield::Fire(Position pos) {
 	if (this->Shots[pos.X][pos.Y]) {

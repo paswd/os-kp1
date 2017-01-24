@@ -33,6 +33,7 @@ public:
 	bool GameControl(void);
 	void SelectNetworkRole(void);
 	std::string GetEmptyMap(void);
+	void PrintMaps(void);
 };
 
 #endif // INTERFACE_H

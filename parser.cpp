@@ -259,7 +259,8 @@ bool BattleParser(string cmd, Battlefield *field, Package *package, bool *game_c
 		StringToBas(message, package->Message);
 		return true;
 	}
-	
-	cout << "Неизвестная команда `" << action << "`" << endl;
+	string message = "Неизвестная команда `" + action + "`\n";
+	StringToBas(message, package->Message);
+	//cout << "Неизвестная команда `" << action << "`" << endl;
 	return true;
 }

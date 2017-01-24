@@ -18,6 +18,15 @@ bool ContinueMessage(string str) {
 	if (str == "Попадание!") {
 		return true;
 	}
+	if (str.find("Неизвестная команда") != string::npos) {
+		return true;
+	}
+	return false;
+}
+bool IsMapUpdated(string str) {
+	if (str == "Попадание!") {
+		return true;
+	}
 	return false;
 }
 
@@ -135,11 +144,16 @@ bool Interface::GameControl(void) {
 		bool is_fst = true;
 		if (this->IsServer) {
 			while (!package.Status && !package.IsGameOver) {
+				if (is_first) {
+					this->PrintMaps();
+				}
 				if (is_fst) {
 					is_fst = false;
 				} else {
-					this->Field->Print();
-					cout << this->EnemyField << endl;
+					string msg_tmp(package.Message);
+					if (IsMapUpdated(msg_tmp)) {
+						this->PrintMaps();
+					}
 				}
 				cout << "PointIn1" << endl;
 				read(ToServer, &package, sizeof(Package));
@@ -172,8 +186,10 @@ bool Interface::GameControl(void) {
 				if (is_fst) {
 					is_fst = false;
 				} else {
-					this->Field->Print();
-					cout << this->EnemyField << endl;
+					string msg_tmp(package.Message);
+					if (IsMapUpdated(msg_tmp)) {
+						this->PrintMaps();
+					}
 				}
 				cout << "PointIn2" << endl;
 				read(ToClient, &package, sizeof(Package));
@@ -202,8 +218,7 @@ bool Interface::GameControl(void) {
 			//is_continue = false;
 			is_first = false;
 			bool cntn = false;
-			this->Field->Print();
-			cout << this->EnemyField << endl;
+			this->PrintMaps();
 			//cout << "Msg: " << package.Message << endl;
 			SetEmptyPackage(&package);
 			do {
@@ -296,8 +311,7 @@ bool Interface::GameControl(void) {
 				write(ToServer, &package, sizeof(Package));
 			}
 		}
-		this->Field->Print();
-		cout << this->EnemyField << endl;
+		this->PrintMaps();
 		cout << "Msg: " << package.Message << endl;
 		if (!game_continue) {
 			return false;
@@ -314,6 +328,9 @@ string Interface::GetEmptyMap(void) {
 	delete field;
 	return res;
 }
-
-
-
+void Interface::PrintMaps(void) {
+	cout << "Ваше поле:" << endl;
+	this->Field->Print();
+	cout << "Поле противника:" << endl;
+	cout << this->EnemyField << endl;
+}
