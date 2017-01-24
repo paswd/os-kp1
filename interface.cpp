@@ -11,6 +11,16 @@
 
 using namespace std;
 
+bool ContinueMessage(string str) {
+	if (str == "Некорректная позиция") {
+		return true;
+	}
+	if (str == "Попадание!") {
+		return true;
+	}
+	return false;
+}
+
 
 Interface::Interface(void) {
 	this->Field = new Battlefield();
@@ -122,8 +132,15 @@ bool Interface::GameControl(void) {
 		SetEmptyPackage(&package);
 		bool cont;
 		cout << "Point" << endl;
+		bool is_fst = true;
 		if (this->IsServer) {
-			while (!package.Status) {
+			while (!package.Status && !package.IsGameOver) {
+				if (is_fst) {
+					is_fst = false;
+				} else {
+					this->Field->Print();
+					cout << this->EnemyField << endl;
+				}
 				cout << "PointIn1" << endl;
 				read(ToServer, &package, sizeof(Package));
 				if (package.Exit) {
@@ -148,9 +165,15 @@ bool Interface::GameControl(void) {
 			}
 		} else {
 			//cout << "Point" << endl;
-			while (!package.Status) {
+			while (!package.Status && !package.IsGameOver) {
 				if (is_first) {
 					break;
+				}
+				if (is_fst) {
+					is_fst = false;
+				} else {
+					this->Field->Print();
+					cout << this->EnemyField << endl;
 				}
 				cout << "PointIn2" << endl;
 				read(ToClient, &package, sizeof(Package));
@@ -174,92 +197,104 @@ bool Interface::GameControl(void) {
 		if (!cont && (!is_first || this->IsServer)) {
 			return false;
 		}
-		is_first = false;
-		bool cntn = false;
-		this->Field->Print();
-		cout << this->EnemyField << endl;
-		//cout << "Msg: " << package.Message << endl;
-		SetEmptyPackage(&package);
-		do {
-			cntn = false;
-			cout << ">>> ";
-			getline(cin, cmd);
-			cmd = StringToLower(cmd);
-			if (cmd == "help") {
-				cout << "Команды геймплея:" << endl;
-				cout << "shot <буква> <число> - произвести выстрел" << endl;
-				cout << "Пример: \n`>>> shot a 3`"<< endl;
-				//cout << "restart - сдаться и начать игру сначала" << endl;
-				//cout << "show - отобразить поле" << endl;
-				cout << "exit - выход из игры" << endl;
-				cout << "help - список доступных в данный момент команд" << endl;
-				cntn = true;
-			} else if (cmd == "exit" || cmd.size() == 0) {
-				string message = "";
-				if (cmd.size() == 0) {
-					message += "exit\n";
+		bool is_continue = true;
+		while (is_continue) {
+			//is_continue = false;
+			is_first = false;
+			bool cntn = false;
+			this->Field->Print();
+			cout << this->EnemyField << endl;
+			//cout << "Msg: " << package.Message << endl;
+			SetEmptyPackage(&package);
+			do {
+				cntn = false;
+				cout << ">>> ";
+				getline(cin, cmd);
+				cmd = StringToLower(cmd);
+				if (cmd == "help") {
+					cout << "Команды геймплея:" << endl;
+					cout << "shot <буква> <число> - произвести выстрел" << endl;
+					cout << "Пример: \n`>>> shot a 3`"<< endl;
+					//cout << "restart - сдаться и начать игру сначала" << endl;
+					//cout << "show - отобразить поле" << endl;
+					cout << "exit - выход из игры" << endl;
+					cout << "help - список доступных в данный момент команд" << endl;
+					cntn = true;
+				} else if (cmd == "exit" || cmd.size() == 0) {
+					string message = "";
+					if (cmd.size() == 0) {
+						message += "exit\n";
+					}
+					//cout << "До свидания!" << endl;
+					message += "До свидания!";
+					cout << message << endl;
+					//strcpy(strdup(message.c_str()), package.Message);
+					StringToBas(message, package.Message);
+					package.Exit = true;
+					game_continue = false;
 				}
-				//cout << "До свидания!" << endl;
-				message += "До свидания!";
-				cout << message << endl;
-				//strcpy(strdup(message.c_str()), package.Message);
-				StringToBas(message, package.Message);
-				package.Exit = true;
-				game_continue = false;
-			}
-		} while (cntn);
-		
-		SetEmptyPackage(&package);
-		package.IsQuestion = true;
-		cout << "Cmd::Str: `" << cmd << "`" << endl;
-		//strcpy(strdup(cmd.c_str()), package.Cmd);
-		StringToBas(cmd, package.Cmd);
-		cout << "Cmd::Bas: `" << package.Cmd << "`" << endl;
-		if (this->IsServer) {
-			write(ToClient, &package, sizeof(Package));
-			if (!game_continue) {
-				break;
-			}
-			cout << "PointIn3" << endl;
-			read(ToServer, &package, sizeof(Package));
-			if (package.IsMap) {
-				string new_map(package.Map);
-				this->EnemyField = new_map;
-			}
-			//this->Field->Print();
-			//cout << this->EnemyField << endl;
-
-			cout << package.Message << endl;
+			} while (cntn);
 			
-			if (package.Exit) {
-				return false;
-			}
 			SetEmptyPackage(&package);
-			package.Status = true;
-			write(ToClient, &package, sizeof(Package));
-		} else {
-			write(ToServer, &package, sizeof(Package));
-			if (!game_continue) {
-				break;
-			}
-			cout << "PointIn4" << endl;
-			read(ToClient, &package, sizeof(Package));
+			package.IsQuestion = true;
+			cout << "Cmd::Str: `" << cmd << "`" << endl;
+			//strcpy(strdup(cmd.c_str()), package.Cmd);
+			StringToBas(cmd, package.Cmd);
+			cout << "Cmd::Bas: `" << package.Cmd << "`" << endl;
+			if (this->IsServer) {
+				write(ToClient, &package, sizeof(Package));
+				if (!game_continue) {
+					break;
+				}
+				cout << "PointIn3" << endl;
+				read(ToServer, &package, sizeof(Package));
+				if (package.IsMap) {
+					string new_map(package.Map);
+					this->EnemyField = new_map;
+				}
+				//this->Field->Print();
+				//cout << this->EnemyField << endl;
 
-			if (package.IsMap) {
-				string new_map(package.Map);
-				this->EnemyField = new_map;
-			}
-			//this->Field->Print();
-			//cout << this->EnemyField << endl;
+				cout << package.Message << endl;
+				string tmp_msg(package.Message);
+				
+				if (package.Exit) {
+					return false;
+				}
+				SetEmptyPackage(&package);
+				if (!ContinueMessage(tmp_msg)) {
+					package.Status = true;
+					is_continue = false;
+				}
+				write(ToClient, &package, sizeof(Package));
+			} else {
+				write(ToServer, &package, sizeof(Package));
+				if (!game_continue) {
+					break;
+				}
+				cout << "PointIn4" << endl;
+				read(ToClient, &package, sizeof(Package));
 
-			cout << package.Message << endl;
-			
-			if (package.Exit) {
-				return false;
+				if (package.IsMap) {
+					string new_map(package.Map);
+					this->EnemyField = new_map;
+				}
+				//this->Field->Print();
+				//cout << this->EnemyField << endl;
+
+				cout << package.Message << endl;
+				string tmp_msg(package.Message);
+
+				if (package.Exit) {
+					return false;
+				}
+				SetEmptyPackage(&package);
+				if (!ContinueMessage(tmp_msg)) {
+					package.Status = true;
+					is_continue = false;
+				}
+				write(ToServer, &package, sizeof(Package));
 			}
-			SetEmptyPackage(&package);
-			package.Status = true;
-			write(ToServer, &package, sizeof(Package));
 		}
 		this->Field->Print();
 		cout << this->EnemyField << endl;

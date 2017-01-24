@@ -164,6 +164,7 @@ bool InstallParser(string cmd, Battlefield *field, bool *game_continue) {
 
 bool BattleParser(string cmd, Battlefield *field, Package *package, bool *game_continue) {
 	*game_continue = true;
+	//*repeat = false;
 	cmd = StringToLower(cmd);
 	package->IsAnswer = true;
 	/*if (cmd == "exit" || cmd.size() == 0) {
@@ -188,6 +189,7 @@ bool BattleParser(string cmd, Battlefield *field, Package *package, bool *game_c
 		Position pos(col, row);
 		if (pos.X >= BATTLEFIELD_SIZE || pos.Y >= BATTLEFIELD_SIZE) {
 			message = "Некорректная позиция";
+			//*repeat = true;
 			cout << message << endl;
 			//package->Message = message.c_str();
 			//strcpy(strdup(message.c_str()), package->Message);
@@ -195,6 +197,7 @@ bool BattleParser(string cmd, Battlefield *field, Package *package, bool *game_c
 			return true;
 		}
 		if (field->Fire(pos)) {
+			//*repeat = true;
 			message = "Попадание!";
 			cout << message << endl;
 			StringToBas(message, package->Message);
