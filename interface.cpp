@@ -113,7 +113,8 @@ bool Interface::InstallControl(void) {
 }
 bool Interface::GameControl(void) {
 	string cmd = "";
-	this->Field->Print();
+	//this->Field->Print();
+	//cout << this->EnemyField << endl;
 	bool game_continue = true;
 	bool is_first = true;
 	while (true) {
@@ -141,6 +142,7 @@ bool Interface::GameControl(void) {
 					//cout << "Cmd::Str: `" << cmd << "`" << endl;
 					SetEmptyPackage(&package);
 					cont = BattleParser(cmd, this->Field, &package, &game_continue);
+					//cout << package.Message << endl;
 					write(ToClient, &package, sizeof(Package));
 				}
 			}
@@ -164,6 +166,7 @@ bool Interface::GameControl(void) {
 					string cmd(package.Cmd);
 					SetEmptyPackage(&package);
 					cont = BattleParser(cmd, this->Field, &package, &game_continue);
+					//cout << package.Message << endl;
 					write(ToServer, &package, sizeof(Package));
 				}
 			}
@@ -172,10 +175,13 @@ bool Interface::GameControl(void) {
 			return false;
 		}
 		is_first = false;
-		bool cnt = false;
+		bool cntn = false;
+		this->Field->Print();
+		cout << this->EnemyField << endl;
+		//cout << "Msg: " << package.Message << endl;
 		SetEmptyPackage(&package);
 		do {
-			cnt = false;
+			cntn = false;
 			cout << ">>> ";
 			getline(cin, cmd);
 			cmd = StringToLower(cmd);
@@ -187,7 +193,7 @@ bool Interface::GameControl(void) {
 				//cout << "show - отобразить поле" << endl;
 				cout << "exit - выход из игры" << endl;
 				cout << "help - список доступных в данный момент команд" << endl;
-				cnt = true;
+				cntn = true;
 			} else if (cmd == "exit" || cmd.size() == 0) {
 				string message = "";
 				if (cmd.size() == 0) {
@@ -201,7 +207,7 @@ bool Interface::GameControl(void) {
 				package.Exit = true;
 				game_continue = false;
 			}
-		} while (cnt);
+		} while (cntn);
 		
 		SetEmptyPackage(&package);
 		package.IsQuestion = true;
@@ -256,7 +262,8 @@ bool Interface::GameControl(void) {
 			write(ToServer, &package, sizeof(Package));
 		}
 		this->Field->Print();
-			cout << this->EnemyField << endl;
+		cout << this->EnemyField << endl;
+		cout << "Msg: " << package.Message << endl;
 		if (!game_continue) {
 			return false;
 		}

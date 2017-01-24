@@ -182,21 +182,27 @@ bool BattleParser(string cmd, Battlefield *field, Package *package, bool *game_c
 	}*/
 	string action = GetParameter(cmd, 0);
 	if (action == "shot") {
+		string message = "";
 		size_t col = ColToUNum(GetParameter(cmd, 1));
 		size_t row = RowToUNum(GetParameter(cmd, 2));
 		Position pos(col, row);
 		if (pos.X >= BATTLEFIELD_SIZE || pos.Y >= BATTLEFIELD_SIZE) {
-			string message = "Некорректная позиция";
+			message = "Некорректная позиция";
+			cout << message << endl;
 			//package->Message = message.c_str();
 			//strcpy(strdup(message.c_str()), package->Message);
 			StringToBas(message, package->Message);
 			return true;
 		}
 		if (field->Fire(pos)) {
-			cout << "Попадание!" << endl;
+			message = "Попадание!";
+			cout << message << endl;
+			StringToBas(message, package->Message);
 			package->IsHit = true;
 		} else {
-			cout << "Промах!" << endl;
+			message = "Промах!";
+			cout << message << endl;
+			StringToBas(message, package->Message);
 		}
 		string map_new = field->GetMap(true);
 		package->IsMap = true;
@@ -205,7 +211,9 @@ bool BattleParser(string cmd, Battlefield *field, Package *package, bool *game_c
 		StringToBas(map_new, package->Map);
 		//field->Print();
 		if (field->IsGameOver()) {
-			cout << "Игра окончена!" << endl;
+			message = "Игра окончена!";
+			cout << message << endl;
+			StringToBas(message, package->Message);
 			package->IsGameOver = true;
 			return false;
 		}
@@ -242,8 +250,11 @@ bool BattleParser(string cmd, Battlefield *field, Package *package, bool *game_c
 		cout << "help - список доступных в данный момент команд" << endl;
 		return true;
 	}
-	if (action == "exit") {
-		cout << "Соперник вышел из игры" << endl;
+	if (action == "exit" || action == "") {
+		string message = "Соперник вышел из игры";		
+		cout << message << endl;
+		StringToBas(message, package->Message);
+		return true;
 	}
 	
 	cout << "Неизвестная команда `" << action << "`" << endl;
