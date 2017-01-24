@@ -257,7 +257,7 @@ bool BattleParser(string cmd, Battlefield *field, Package *package, bool *game_c
 		string message = "Соперник вышел из игры";		
 		cout << message << endl;
 		StringToBas(message, package->Message);
-		return true;
+		return false;
 	}
 	string message = "Неизвестная команда `" + action + "`\n";
 	StringToBas(message, package->Message);

@@ -29,6 +29,12 @@ bool IsMapUpdated(string str) {
 	}
 	return false;
 }
+bool IsGameOver(string str) {
+	if (str == "Соперник вышел из игры") {
+		return true;
+	}
+	return false;
+}
 
 
 Interface::Interface(void) {
@@ -136,15 +142,16 @@ bool Interface::GameControl(void) {
 	//cout << this->EnemyField << endl;
 	bool game_continue = true;
 	bool is_first = true;
+	bool first = true;
 	while (true) {
 		Package package;
 		SetEmptyPackage(&package);
-		bool cont;
-		cout << "Point" << endl;
+		bool cont = true;
 		bool is_fst = true;
 		if (this->IsServer) {
-			while (!package.Status && !package.IsGameOver) {
-				if (is_first) {
+			while (!package.Status && !package.IsGameOver && cont) {
+				if (first) {
+					first = false;
 					this->PrintMaps();
 				}
 				if (is_fst) {
@@ -155,18 +162,16 @@ bool Interface::GameControl(void) {
 						this->PrintMaps();
 					}
 				}
-				cout << "PointIn1" << endl;
 				read(ToServer, &package, sizeof(Package));
 				if (package.Exit) {
-					cout << "Соперник прервал игру" << endl;
+					cout << "Соперник вышел из игры" << endl;
+					//cout << "exit1" << endl;
 					game_continue = false;
 					return false;
 				}
-				cout << "PointIn2" << endl;
 				if (package.Status) {
 					break;
 				}
-				cout << "PointIn3" << endl;
 				if (package.IsQuestion) {
 					//cout << "Cmd::Bas: `" << package.Cmd << "`" << endl;
 					string cmd(package.Cmd);
@@ -179,7 +184,7 @@ bool Interface::GameControl(void) {
 			}
 		} else {
 			//cout << "Point" << endl;
-			while (!package.Status && !package.IsGameOver) {
+			while (!package.Status && !package.IsGameOver && cont) {
 				if (is_first) {
 					break;
 				}
@@ -191,11 +196,11 @@ bool Interface::GameControl(void) {
 						this->PrintMaps();
 					}
 				}
-				cout << "PointIn2" << endl;
 				read(ToClient, &package, sizeof(Package));
 				if (package.Exit) {
 					game_continue = false;
-					cout << "Соперник прервал игру" << endl;
+					cout << "Соперник вышел из игры" << endl;
+					//cout << "exit2" << endl;
 					return false;
 				}
 				if (package.Status) {
@@ -252,16 +257,13 @@ bool Interface::GameControl(void) {
 			
 			SetEmptyPackage(&package);
 			package.IsQuestion = true;
-			cout << "Cmd::Str: `" << cmd << "`" << endl;
 			//strcpy(strdup(cmd.c_str()), package.Cmd);
-			StringToBas(cmd, package.Cmd);
-			cout << "Cmd::Bas: `" << package.Cmd << "`" << endl;
+			StringToBas(cmd, package.Cmd);;
 			if (this->IsServer) {
 				write(ToClient, &package, sizeof(Package));
 				if (!game_continue) {
 					break;
 				}
-				cout << "PointIn3" << endl;
 				read(ToServer, &package, sizeof(Package));
 				if (package.IsMap) {
 					string new_map(package.Map);
@@ -287,7 +289,6 @@ bool Interface::GameControl(void) {
 				if (!game_continue) {
 					break;
 				}
-				cout << "PointIn4" << endl;
 				read(ToClient, &package, sizeof(Package));
 
 				if (package.IsMap) {
@@ -311,11 +312,11 @@ bool Interface::GameControl(void) {
 				write(ToServer, &package, sizeof(Package));
 			}
 		}
-		this->PrintMaps();
-		cout << "Msg: " << package.Message << endl;
+		
 		if (!game_continue) {
 			return false;
 		}
+		this->PrintMaps();
 		/*if (!BattleParser(cmd, this->Field, &game_continue)) {
 			break;
 		}*/
