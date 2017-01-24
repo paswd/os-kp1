@@ -154,7 +154,6 @@ bool InstallParser(string cmd, Battlefield *field, bool *game_continue) {
 			cout << "Вы должы поставить на поле все имеющиеся корабли" << endl;
 			return true;
 		}
-		//cout << "Игра начинается..." << endl;
 		return false;
 	}
 	
@@ -164,23 +163,8 @@ bool InstallParser(string cmd, Battlefield *field, bool *game_continue) {
 
 bool BattleParser(string cmd, Battlefield *field, Package *package, bool *game_continue) {
 	*game_continue = true;
-	//*repeat = false;
 	cmd = StringToLower(cmd);
 	package->IsAnswer = true;
-	/*if (cmd == "exit" || cmd.size() == 0) {
-		string message = "";
-		if (cmd.size() == 0) {
-			message += "exit\n";
-		}
-		//cout << "До свидания!" << endl;
-		message += "До свидания!";
-		cout << message << endl;
-		//package->Message = message.c_str();
-		strcpy(strdup(message.c_str()), package->Message);
-		package->Exit = true;
-		*game_continue = false;
-		return false;
-	}*/
 	string action = GetParameter(cmd, 0);
 	if (action == "shot") {
 		string message = "";
@@ -189,15 +173,11 @@ bool BattleParser(string cmd, Battlefield *field, Package *package, bool *game_c
 		Position pos(col, row);
 		if (pos.X >= BATTLEFIELD_SIZE || pos.Y >= BATTLEFIELD_SIZE) {
 			message = "Некорректная позиция";
-			//*repeat = true;
 			cout << message << endl;
-			//package->Message = message.c_str();
-			//strcpy(strdup(message.c_str()), package->Message);
 			StringToBas(message, package->Message);
 			return true;
 		}
 		if (field->Fire(pos)) {
-			//*repeat = true;
 			message = "Попадание!";
 			cout << message << endl;
 			StringToBas(message, package->Message);
@@ -209,10 +189,7 @@ bool BattleParser(string cmd, Battlefield *field, Package *package, bool *game_c
 		}
 		string map_new = field->GetMap(true);
 		package->IsMap = true;
-		//package->Map = map_new.c_str();
-		//strcpy(strdup(map_new.c_str()), package->Map);
 		StringToBas(map_new, package->Map);
-		//field->Print();
 		if (field->IsGameOver()) {
 			message = "Игра окончена!";
 			cout << message << endl;
@@ -222,33 +199,11 @@ bool BattleParser(string cmd, Battlefield *field, Package *package, bool *game_c
 		}
 		return true;
 	}
-	/*if (action == "restart") {
-		cout << "Вы уверены? (y/n)" << endl;
-		string ans;
-		bool first = true;
-		do {
-			if (!first) {
-				cout << "Повторите ввод" << endl;
-			}
-			cout << ">>> ";
-			cin >> ans;
-		} while (ans == "y" || ans == "n");
-		if (ans == "y") {
-			return false;
-		}
-		return true;
-	}*/
-	/*if (action == "show") {
-		
-		field->Print();
-	}*/
 
 	if (action == "help") {
 		cout << "Команды геймплея:" << endl;
 		cout << "shot <буква> <число> - произвести выстрел" << endl;
 		cout << "Пример: \n`>>> shot a 3`"<< endl;
-		//cout << "restart - сдаться и начать игру сначала" << endl;
-		//cout << "show - отобразить поле" << endl;
 		cout << "exit - выход из игры" << endl;
 		cout << "help - список доступных в данный момент команд" << endl;
 		return true;
@@ -261,6 +216,5 @@ bool BattleParser(string cmd, Battlefield *field, Package *package, bool *game_c
 	}
 	string message = "Неизвестная команда `" + action + "`\n";
 	StringToBas(message, package->Message);
-	//cout << "Неизвестная команда `" << action << "`" << endl;
 	return true;
 }

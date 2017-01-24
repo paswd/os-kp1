@@ -257,7 +257,6 @@ Battlefield::Battlefield(void) {
 			this->Shots[i][j] = false;
 		}
 	}
-	//this->Visibility = visibility;
 }
 Battlefield::~Battlefield(void) {
 	this->Clear();
@@ -302,7 +301,6 @@ string Battlefield::GetMap(bool is_private) {
 	for (size_t i = 0; i < BATTLEFIELD_SIZE; i++) {
 		for (size_t j = 0; j <= BATTLEFIELD_SIZE; j++) {
 			if (j == 0) {
-				//cout << i + 1;
 				size_t num = i + 1;
 				
 				if (num < 10) {
@@ -351,22 +349,12 @@ void Battlefield::RandomFill(void) {
 	Warship *ship = NULL;
 	for (size_t i = SHIP_MAX_LENGTH; i > 0; i--) {
 		while (this->Ships.IsUsable(i)) {
-			//this->Ships.Print();
 			Position pos(rand() % (BATTLEFIELD_SIZE - i + 1), rand() % (BATTLEFIELD_SIZE - i + 1));
-			//cout << i << endl;
-			//cout << pos << endl;
 			char orientation = orientation_variants[rand() % 2];
-			//cout << orientation << endl;
-			//Warship *ship = new Warship;
 			if (ship == NULL) {
 				ship = new Warship;
 			}
-			if (!ship->Configure(pos, orientation, i, this, false)) {
-				//delete ship;
-				//cout << "False" << endl;
-				//this->Ships.FreeShip(i);
-			} else {
-				//cout << "True" << endl;
+			if (ship->Configure(pos, orientation, i, this, false)) {
 				ship = NULL;
 			}
 		}
@@ -374,7 +362,6 @@ void Battlefield::RandomFill(void) {
 }
 void Battlefield::Clear(void) {
 	this->Points = 0;
-	//cout << "Clear::True" << endl;
 	for (size_t i = 0; i < BATTLEFIELD_SIZE; i++) {
 		for (size_t j = 0; j < BATTLEFIELD_SIZE; j++) {
 			if (this->Map[j][i] != NULL) {

@@ -17,9 +17,7 @@ public:
 	void Input(std::istream &is);
 	void Print(void);
 
-	//Переопределение вывода
 	friend std::ostream& operator<<(std::ostream& os, const Position& pos);
-	//Переопределение ввода
 	friend std::istream& operator>>(std::istream& is, Position& obj);
 };
 

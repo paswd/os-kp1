@@ -68,27 +68,16 @@ void Interface::Start(void) {
 			
 			SetEmptyPackage(&package);
 			package.Ready = true;
-			//Package got;
-			read(ToServer, &package, sizeof(Package));
-			/*if (package.Ready) {
-				cout << "True" << endl;
-			} else {
-				cout << "False" << endl;
-			}*/
+			read(ToServer, &package, sizeof(Package));\
 			write(ToClient, &package, sizeof(Package));
 
 		} else {
 			SetEmptyPackage(&package);
 			package.Ready = true;
-			//cout << package.Num << endl;
-			//Package got;
 			write(ToServer, &package, sizeof(Package));
 			read(ToClient, &package, sizeof(Package));
 		}
 		cout << "Игра начинается..." << endl;
-		/*if (this->IsServer) {
-			read(ToServer, &package, sizeof(Package));
-		}*/
 		if (!this->GameControl()) {
 			break;
 		}
@@ -126,9 +115,7 @@ bool Interface::InstallControl(void) {
 	bool game_continue;
 	while (true) {
 		cout << ">>> ";
-		getline(cin, cmd);
-		//this->Field->Clear();
-		//this->Field->Clear();
+		getline(cin, cmd);\
 		if (!InstallParser(cmd, this->Field, &game_continue)) {
 			break;
 		}
@@ -137,9 +124,7 @@ bool Interface::InstallControl(void) {
 	return game_continue;
 }
 bool Interface::GameControl(void) {
-	string cmd = "";
-	//this->Field->Print();
-	//cout << this->EnemyField << endl;
+	string cmd = "";\
 	bool game_continue = true;
 	bool is_first = true;
 	bool first = true;
@@ -173,17 +158,13 @@ bool Interface::GameControl(void) {
 					break;
 				}
 				if (package.IsQuestion) {
-					//cout << "Cmd::Bas: `" << package.Cmd << "`" << endl;
 					string cmd(package.Cmd);
-					//cout << "Cmd::Str: `" << cmd << "`" << endl;
 					SetEmptyPackage(&package);
 					cont = BattleParser(cmd, this->Field, &package, &game_continue);
-					//cout << package.Message << endl;
 					write(ToClient, &package, sizeof(Package));
 				}
 			}
 		} else {
-			//cout << "Point" << endl;
 			while (!package.Status && !package.IsGameOver && cont) {
 				if (is_first) {
 					break;
@@ -200,7 +181,6 @@ bool Interface::GameControl(void) {
 				if (package.Exit) {
 					game_continue = false;
 					cout << "Соперник вышел из игры" << endl;
-					//cout << "exit2" << endl;
 					return false;
 				}
 				if (package.Status) {
@@ -210,7 +190,6 @@ bool Interface::GameControl(void) {
 					string cmd(package.Cmd);
 					SetEmptyPackage(&package);
 					cont = BattleParser(cmd, this->Field, &package, &game_continue);
-					//cout << package.Message << endl;
 					write(ToServer, &package, sizeof(Package));
 				}
 			}
@@ -220,11 +199,9 @@ bool Interface::GameControl(void) {
 		}
 		bool is_continue = true;
 		while (is_continue) {
-			//is_continue = false;
 			is_first = false;
 			bool cntn = false;
 			this->PrintMaps();
-			//cout << "Msg: " << package.Message << endl;
 			SetEmptyPackage(&package);
 			do {
 				cntn = false;
@@ -235,8 +212,6 @@ bool Interface::GameControl(void) {
 					cout << "Команды геймплея:" << endl;
 					cout << "shot <буква> <число> - произвести выстрел" << endl;
 					cout << "Пример: \n`>>> shot a 3`"<< endl;
-					//cout << "restart - сдаться и начать игру сначала" << endl;
-					//cout << "show - отобразить поле" << endl;
 					cout << "exit - выход из игры" << endl;
 					cout << "help - список доступных в данный момент команд" << endl;
 					cntn = true;
@@ -245,10 +220,8 @@ bool Interface::GameControl(void) {
 					if (cmd.size() == 0) {
 						message += "exit\n";
 					}
-					//cout << "До свидания!" << endl;
 					message += "До свидания!";
 					cout << message << endl;
-					//strcpy(strdup(message.c_str()), package.Message);
 					StringToBas(message, package.Message);
 					package.Exit = true;
 					game_continue = false;
@@ -257,7 +230,6 @@ bool Interface::GameControl(void) {
 			
 			SetEmptyPackage(&package);
 			package.IsQuestion = true;
-			//strcpy(strdup(cmd.c_str()), package.Cmd);
 			StringToBas(cmd, package.Cmd);;
 			if (this->IsServer) {
 				write(ToClient, &package, sizeof(Package));
@@ -269,8 +241,6 @@ bool Interface::GameControl(void) {
 					string new_map(package.Map);
 					this->EnemyField = new_map;
 				}
-				//this->Field->Print();
-				//cout << this->EnemyField << endl;
 
 				cout << package.Message << endl;
 				string tmp_msg(package.Message);
@@ -295,8 +265,6 @@ bool Interface::GameControl(void) {
 					string new_map(package.Map);
 					this->EnemyField = new_map;
 				}
-				//this->Field->Print();
-				//cout << this->EnemyField << endl;
 
 				cout << package.Message << endl;
 				string tmp_msg(package.Message);
@@ -317,9 +285,6 @@ bool Interface::GameControl(void) {
 			return false;
 		}
 		this->PrintMaps();
-		/*if (!BattleParser(cmd, this->Field, &game_continue)) {
-			break;
-		}*/
 	}
 	return game_continue;
 }

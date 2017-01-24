@@ -64,7 +64,6 @@ public:
 
 class Battlefield {
 private:
-	//bool Visibility;
 	size_t Points;
 
 	char GetSymPublic(Position pos);
