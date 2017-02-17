@@ -127,7 +127,7 @@ bool Interface::InstallControl(void) {
 	return game_continue;
 }
 bool Interface::GameControl(void) {
-	string cmd = "";\
+	string cmd = "";
 	bool game_continue = true;
 	bool is_first = true;
 	bool first = true;
@@ -245,8 +245,8 @@ bool Interface::GameControl(void) {
 					this->EnemyField = new_map;
 				}
 
-				cout << package.Message << endl;
 				string tmp_msg(package.Message);
+				cout << tmp_msg << endl;
 				
 				if (package.Exit) {
 					return false;
@@ -269,8 +269,8 @@ bool Interface::GameControl(void) {
 					this->EnemyField = new_map;
 				}
 
-				cout << package.Message << endl;
 				string tmp_msg(package.Message);
+				cout << tmp_msg << endl;
 
 				if (package.Exit) {
 					return false;

@@ -173,13 +173,13 @@ bool BattleParser(string cmd, Battlefield *field, Package *package, bool *game_c
 		Position pos(col, row);
 		if (pos.X >= BATTLEFIELD_SIZE || pos.Y >= BATTLEFIELD_SIZE) {
 			message = "Некорректная позиция";
-			cout << message << endl;
+			//cout << message << endl;
 			StringToBas(message, package->Message);
 			return true;
 		}
 		if (field->IsPointDestroyed(pos)) {
 			message = "Вы уже стреляли по этой клетке";
-			cout << message << endl;
+			//cout << message << endl;
 			StringToBas(message, package->Message);
 			return true;
 		}

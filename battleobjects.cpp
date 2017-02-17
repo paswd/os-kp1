@@ -182,6 +182,7 @@ bool Warship::Configure(Position pos, char orientation, size_t length, Battlefie
 		return false;
 	}
 	if (!field->Ships.UseShip(length)) {
+		cout << "У вас больше нет кораблей данного класса" << endl;
 		return false;
 	}
 	this->Pos = pos;
