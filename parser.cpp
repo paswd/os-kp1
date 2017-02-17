@@ -177,6 +177,12 @@ bool BattleParser(string cmd, Battlefield *field, Package *package, bool *game_c
 			StringToBas(message, package->Message);
 			return true;
 		}
+		if (field->IsPointDestroyed(pos)) {
+			message = "Вы уже стреляли по этой клетке";
+			cout << message << endl;
+			StringToBas(message, package->Message);
+			return true;
+		}
 		if (field->Fire(pos)) {
 			message = "Попадание!";
 			cout << message << endl;

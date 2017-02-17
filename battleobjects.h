@@ -83,6 +83,7 @@ public:
 	void RandomFill(void);
 	void Clear(void);
 	bool IsGameOver(void);
+	bool IsPointDestroyed(Position pos);
 };
 
 #endif // BATTLEOBJECTS_H

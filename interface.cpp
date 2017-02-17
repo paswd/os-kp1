@@ -21,6 +21,9 @@ bool ContinueMessage(string str) {
 	if (str.find("Неизвестная команда") != string::npos) {
 		return true;
 	}
+	if (str.find("Вы уже стреляли по этой клетке") != string::npos) {
+		return true;
+	}
 	return false;
 }
 bool IsMapUpdated(string str) {

@@ -373,3 +373,6 @@ void Battlefield::Clear(void) {
 bool Battlefield::IsGameOver(void) {
 	return this->Points >= this->Ships.GetMaxPoints();
 }
+bool Battlefield::IsPointDestroyed(Position pos) {
+	return this->Shots[pos.X][pos.Y];
+}
